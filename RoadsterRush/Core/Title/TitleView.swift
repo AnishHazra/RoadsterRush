@@ -28,7 +28,7 @@ struct TitleView: View {
                         .font(AppFonts.lcd(10))
                         .tracking(2)
                         .foregroundStyle(AppColors.secondaryText)
-                    RoadsterLogo(scale: 0.72, stacked: false)
+                    RoadsterLogo(scale: 0.64, stacked: false)
                     Text("Fly the new 2026 Tesla Roadster over piles of parked Teslas.")
                         .font(AppFonts.ui(15, weight: .medium))
                         .foregroundStyle(AppColors.secondaryText)
