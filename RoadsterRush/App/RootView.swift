@@ -35,6 +35,8 @@ struct RootView: View {
         }
         .statusBarHidden()
         .persistentSystemOverlays(.hidden)
+        // Otherwise iOS holds back touches near the edges to check for a home swipe
+        .defersSystemGestures(on: screen == .game ? .all : [])
         .task {
             game.setBest(bestScore)
             #if DEBUG

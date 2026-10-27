@@ -6,6 +6,7 @@ import Observation
 final class GameModel {
     static let gravity = 16.0
     static let thrustPower = 34.0
+    static let minThrustTime = 0.25
     static let maxRise = 9.0
     static let drain = 0.36
     static let refill = 0.32
@@ -63,6 +64,8 @@ final class GameModel {
     @ObservationIgnored private var nextBlock = 70.0
     @ObservationIgnored private var shake = 0.0
     @ObservationIgnored private var thrusting = false
+    @ObservationIgnored private var holdingThrust = false
+    @ObservationIgnored private var thrustPulse = 0.0
     @ObservationIgnored private var demoTime = 0.0
     @ObservationIgnored private var lastFlip = 0.0
     @ObservationIgnored private var bestBeforeRun = 0
@@ -89,9 +92,12 @@ final class GameModel {
 
     func thrust(_ on: Bool) {
         if on && state == .ready { start() }
-        let wasThrusting = thrusting
-        thrusting = on && isLive
-        if thrusting && !wasThrusting { haptics.tick() }
+        holdingThrust = on && isLive
+        guard holdingThrust else { return }
+        // A quick tap still gives a visible hop instead of a single frame of thrust
+        thrustPulse = Self.minThrustTime
+        if !thrusting { haptics.tick() }
+        thrusting = true
     }
 
     func flipCar() {
@@ -106,12 +112,13 @@ final class GameModel {
         resetRun()
         bestBeforeRun = best
         state = .playing
+        haptics.prepare()
     }
 
     func pause() {
         guard state == .playing, !isPaused else { return }
         isPaused = true
-        thrusting = false
+        stopThrust()
         flying = false
         sounds.loops(thrust: 0, side: 0)
     }
@@ -178,7 +185,7 @@ final class GameModel {
         nextBlock = 70
         flame = 0
         shake = 0
-        thrusting = false
+        stopThrust()
         demoTime = 0
         lastFlip = 0
         airLevel = 1
@@ -194,6 +201,8 @@ final class GameModel {
         speed = min(18 + Double(level - 1) * 1.6, 34)
 
         let wasAirborne = airborne
+        thrusting = holdingThrust || thrustPulse > 0
+        thrustPulse = max(0, thrustPulse - dt)
         flipStep(dt)
         let across = cos(roll)
         let tilt = sin(roll)
@@ -256,10 +265,16 @@ final class GameModel {
         }
     }
 
+    private func stopThrust() {
+        thrusting = false
+        holdingThrust = false
+        thrustPulse = 0
+    }
+
     private func checkCrash() {
         guard y < surfaceAt(x, z) - 0.05 else { return }
         state = .crashed
-        thrusting = false
+        stopThrust()
         shake = 1
         flip = -1
         roll = 0
