@@ -26,6 +26,12 @@
 // Stays on screen instead of rotating with the coin
 ```
 
+### 2. Git
+
+- Do not commit or push unless asked. Branch off `develop`, never commit to it directly.
+- Commit message is a single subject line only: `type(Scope): summary` (e.g. `feat(Badge): add sponsored badges`). No description body.
+- Never add `Co-Authored-By: Claude …` or any other Claude attribution to commits or PRs.
+
 ## Deployment Target
 
 - Minimum deployment target is iOS 17.
