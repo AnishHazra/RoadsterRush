@@ -36,12 +36,7 @@ final class SoundService {
     func load() async {
         guard !isLoaded else { return }
         isLoaded = true
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            logger.error("Audio session failed: \(error.localizedDescription)")
-        }
+        await Self.activateSession()
 
         thrustBuffer = Self.buffer(named: "thrust")
         sideBuffer = Self.buffer(named: "side_jet")
@@ -113,6 +108,17 @@ final class SoundService {
         player.volume = effect.volume
         player.scheduleBuffer(buffer, at: nil)
         player.play()
+    }
+
+    // Session calls can block, so keep them off the main thread.
+    @concurrent
+    private nonisolated static func activateSession() async {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            Logger(subsystem: "RoadsterRush", category: "Sound").error("Audio session failed: \(error.localizedDescription)")
+        }
     }
 
     private static func buffer(named name: String) -> AVAudioPCMBuffer? {

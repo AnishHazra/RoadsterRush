@@ -19,6 +19,7 @@ final class GameScene {
     private let stacks: StackRenderer
     private var updates: EventSubscription?
     private var puffClock: Float = 0
+    private var excitement: Float = 0.25
     private var lastZ = 0.0
     private static let sunDirection = simd_normalize(SIMD3<Float>(-0.35, -1, -0.45))
 
@@ -66,6 +67,9 @@ final class GameScene {
         }
         lastZ = model.z
         road.follow(model.z)
+        let hype: Float = model.state == .playing && model.airborne ? 1 : 0.25
+        excitement += (hype - excitement) * min(1, step * 3)
+        road.cheer(time: Float(model.time), excitement: excitement)
         stacks.sync(model.blocks, version: model.blocksVersion)
 
         player.thrusters.set(power: Float(model.flame), push: Float(model.push), torque: Float(model.torque), time: Float(model.time))

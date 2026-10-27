@@ -11,9 +11,9 @@ struct TitleView: View {
                 stops: [
                     .init(color: AppColors.background.opacity(0.55), location: 0),
                     .init(color: .clear, location: 0.14),
-                    .init(color: .clear, location: 0.36),
-                    .init(color: AppColors.background.opacity(0.9), location: 0.54),
-                    .init(color: AppColors.background, location: 0.62),
+                    .init(color: .clear, location: 0.5),
+                    .init(color: AppColors.background.opacity(0.9), location: 0.66),
+                    .init(color: AppColors.background, location: 0.74),
                 ],
                 startPoint: .top,
                 endPoint: .bottom
@@ -34,7 +34,6 @@ struct TitleView: View {
                         .foregroundStyle(AppColors.secondaryText)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 8)
-                    HowToCard()
                     Button("TAP TO START", action: onStart)
                         .buttonStyle(PrimaryButtonStyle(height: 60))
                 }
