@@ -29,7 +29,7 @@ Roadster Rush is a modern take on **F1 Race**, the classic game on old keypad ph
 
 | Action | Control |
 | --- | --- |
-| Fly up (uses air) | Hold **FLY** |
+| Fly up (uses air) | Hold **FLY**, or tap it for a short hop |
 | Steer and aim your landing | **Joystick** |
 | Barrel roll and side dash | **FLIP** |
 

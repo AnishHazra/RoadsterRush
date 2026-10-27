@@ -30,15 +30,11 @@ struct FlipButton: View {
         .frame(width: 80, height: 80)
         .scaleEffect(pressed ? 0.92 : 1)
         .animation(.easeOut(duration: 0.08), value: pressed)
-        .contentShape(Circle())
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    guard !pressed else { return }
-                    pressed = true
-                    game.flipCar()
-                }
-                .onEnded { _ in pressed = false }
-        )
+        .overlay {
+            TouchPad { down in
+                pressed = down
+                if down { game.flipCar() }
+            }
+        }
     }
 }

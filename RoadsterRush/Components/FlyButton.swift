@@ -35,18 +35,11 @@ struct FlyButton: View {
         .frame(width: 124, height: 124)
         .scaleEffect(pressed ? 0.94 : 1)
         .animation(.easeOut(duration: 0.08), value: pressed)
-        .contentShape(Circle())
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    guard !pressed else { return }
-                    pressed = true
-                    game.thrust(true)
-                }
-                .onEnded { _ in
-                    pressed = false
-                    game.thrust(false)
-                }
-        )
+        .overlay {
+            TouchPad { down in
+                pressed = down
+                game.thrust(down)
+            }
+        }
     }
 }
