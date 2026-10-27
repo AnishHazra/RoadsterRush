@@ -26,7 +26,10 @@ struct GameView: View {
 
             if game.state == .crashed {
                 CrashView(game: game, onHome: onQuit)
-                    .transition(.opacity.animation(.easeOut(duration: 0.35).delay(0.45)))
+                    .transition(.asymmetric(
+                        insertion: .opacity.animation(.easeOut(duration: 0.35).delay(0.45)),
+                        removal: .identity
+                    ))
             }
         }
         .animation(.easeOut(duration: 0.2), value: game.landingOnCars)

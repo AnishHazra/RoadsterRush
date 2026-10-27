@@ -13,12 +13,12 @@ struct RoadsterLogo: View {
                 .font(AppFonts.title(56 * scale))
                 .foregroundStyle(AppColors.text)
                 .shadow(color: AppColors.cyan.opacity(0.25), radius: 18)
-            hop
+            rush
         }
     }
 
-    private var hop: some View {
-        Text("HOP")
+    private var rush: some View {
+        Text("RUSH")
             .font(AppFonts.lcd(34 * scale, bold: true))
             .foregroundStyle(AppColors.cyan)
             .shadow(color: AppColors.cyan.opacity(0.9), radius: 6 * scale)
