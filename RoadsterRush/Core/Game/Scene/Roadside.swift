@@ -11,10 +11,16 @@ enum Roadside {
         case stripe
         case roof
         case glass
-        case stoneA
-        case stoneB
-        case stoneC
-        case stoneD
+        case brick
+        case terracotta
+        case sand
+        case mustard
+        case teal
+        case navy
+        case olive
+        case charcoal
+
+        static let buildings: [Part] = [.brick, .terracotta, .sand, .mustard, .teal, .navy, .olive, .charcoal]
     }
 
     private static let standStart: Float = 7.6
@@ -47,10 +53,14 @@ enum Roadside {
             case .stripe: materials.paint([0.7, 0.03, 0.03], roughness: 0.6)
             case .roof: materials.paint([0.8, 0.8, 0.82], metallic: 0.3, roughness: 0.5)
             case .glass: materials.paint([0.03, 0.06, 0.12], metallic: 0.7, roughness: 0.12)
-            case .stoneA: materials.paint([0.5, 0.47, 0.42], roughness: 0.85)
-            case .stoneB: materials.paint([0.3, 0.33, 0.38], roughness: 0.8)
-            case .stoneC: materials.paint([0.62, 0.6, 0.58], roughness: 0.85)
-            case .stoneD: materials.paint([0.16, 0.2, 0.27], metallic: 0.2, roughness: 0.6)
+            case .brick: materials.paint([0.35, 0.08, 0.05], roughness: 0.9)
+            case .terracotta: materials.paint([0.5, 0.18, 0.08], roughness: 0.85)
+            case .sand: materials.paint([0.45, 0.33, 0.18], roughness: 0.85)
+            case .mustard: materials.paint([0.6, 0.38, 0.06], roughness: 0.8)
+            case .teal: materials.paint([0.03, 0.2, 0.22], metallic: 0.2, roughness: 0.6)
+            case .navy: materials.paint([0.03, 0.06, 0.2], metallic: 0.3, roughness: 0.5)
+            case .olive: materials.paint([0.16, 0.2, 0.08], roughness: 0.85)
+            case .charcoal: materials.paint([0.06, 0.06, 0.07], metallic: 0.2, roughness: 0.7)
             }
         }
     }
@@ -127,7 +137,6 @@ enum Roadside {
         random: inout SeededRandom,
         part: (Part) -> UInt32
     ) {
-        let stones: [Part] = [.stoneA, .stoneB, .stoneC, .stoneD]
         let gap: Float = 1.5
         var z = -length / 2
         while z < length / 2 - 3 {
@@ -138,9 +147,9 @@ enum Roadside {
             let body = depth - gap
             let centerX = side * (inner + width / 2)
             let centerZ = z + depth / 2
-            let stone = stones.randomElement(using: &random) ?? .stoneA
+            let color = Part.buildings.randomElement(using: &random) ?? .brick
 
-            builder.addBox(center: [centerX, height / 2, centerZ], size: [width, height, body], part: part(stone))
+            builder.addBox(center: [centerX, height / 2, centerZ], size: [width, height, body], part: part(color))
             if Float.random(in: 0..<1, using: &random) < 0.4 {
                 let cap = Float.random(in: 2...5, using: &random)
                 builder.addBox(center: [centerX, height + cap / 2, centerZ], size: [width * 0.3, cap, body * 0.3], part: part(.concrete))
